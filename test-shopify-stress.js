@@ -14,7 +14,7 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
-const SHOPIFY_STORE = 'the-fashion-company-3.myshopify.com';
+const SHOPIFY_STORE = process.env.SHOPIFY_STORE || 'the-fashion-company-3.myshopify.com';
 const TOTAL_CALLS = 50;
 const RESULTS_FILE = path.join(__dirname, 'shopify-stress-results.json');
 

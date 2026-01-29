@@ -15,7 +15,7 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
-const SHOPIFY_STORE = 'the-fashion-company-3.myshopify.com';
+const SHOPIFY_STORE = process.env.SHOPIFY_STORE || 'the-fashion-company-3.myshopify.com';
 const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
 const RESULTS_FILE = path.join(__dirname, 'cart-latency-results.json');
 

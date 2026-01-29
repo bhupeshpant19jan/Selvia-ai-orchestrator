@@ -11,9 +11,9 @@
 
 const https = require('https');
 
-const SHOPIFY_STORE = 'the-fashion-company-3.myshopify.com';
-const SHOPIFY_API_VERSION = '2024-01';
-const SHOPIFY_ACCESS_TOKEN = ''; // Set via env or will use OAuth
+const SHOPIFY_STORE = process.env.SHOPIFY_STORE || 'the-fashion-company-3.myshopify.com';
+const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION || '2024-01';
+const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN || '';
 
 // Groq API for testing the full extraction pipeline
 const GROQ_API_KEY = process.env.GROQ_API_KEY || '';

@@ -18,8 +18,9 @@ import json
 import time
 import sys
 import uuid
+import os
 
-N8N_BASE = "http://localhost:5678"
+N8N_BASE = os.environ.get("N8N_BASE", "http://localhost:5678")
 WEBHOOK_ID = "f67e2ae9-cf70-4068-97f5-07ca8f0f902b"
 # Use webhook-test for inactive workflows, webhook for active ones
 CHAT_URL = f"{N8N_BASE}/webhook-test/{WEBHOOK_ID}/chat"

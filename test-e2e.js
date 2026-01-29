@@ -19,9 +19,9 @@ const { randomUUID } = require('crypto');
 const https = require('https');
 const http = require('http');
 
-const N8N_BASE = 'http://localhost:5678';
+const N8N_BASE = process.env.N8N_BASE || 'http://localhost:5678';
 const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
-const SHOPIFY_STORE = 'the-fashion-company-3.myshopify.com';
+const SHOPIFY_STORE = process.env.SHOPIFY_STORE || 'the-fashion-company-3.myshopify.com';
 
 const PASS = '\x1b[92mPASS\x1b[0m';
 const FAIL = '\x1b[91mFAIL\x1b[0m';
