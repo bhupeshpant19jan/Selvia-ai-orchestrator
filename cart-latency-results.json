@@ -1,0 +1,579 @@
+{
+  "timestamp": "2026-01-28T15:16:13.646Z",
+  "store": "the-fashion-company-3.myshopify.com",
+  "statistics": {
+    "groq": {
+      "totalQueries": 35,
+      "successCount": 35,
+      "correctIntents": 30,
+      "accuracyPct": "85.7",
+      "latency": {
+        "min": 85,
+        "max": 295,
+        "avg": 145,
+        "median": 140,
+        "p90": 244,
+        "p95": 295,
+        "p99": 295
+      },
+      "byGroup": {
+        "add": {
+          "count": 10,
+          "correct": 9,
+          "avgLatencyMs": 186
+        },
+        "view": {
+          "count": 5,
+          "correct": 4,
+          "avgLatencyMs": 150
+        },
+        "checkout": {
+          "count": 10,
+          "correct": 9,
+          "avgLatencyMs": 138
+        },
+        "remove": {
+          "count": 5,
+          "correct": 5,
+          "avgLatencyMs": 111
+        },
+        "clear": {
+          "count": 5,
+          "correct": 3,
+          "avgLatencyMs": 106
+        }
+      }
+    },
+    "urlGeneration": {
+      "count": 20,
+      "avgLatencyMs": 0.05,
+      "avgUrlLength": 109
+    },
+    "permalink": {
+      "count": 5,
+      "successCount": 0,
+      "avgLatencyMs": 30
+    },
+    "rateLimitWaits": 1
+  },
+  "groqResults": [
+    {
+      "index": 1,
+      "group": "add",
+      "input": "Add the dress to my cart",
+      "expectedIntent": "add_to_cart",
+      "extractedIntent": "add_to_cart",
+      "intentCorrect": true,
+      "latencyMs": 244,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 2,
+      "group": "add",
+      "input": "Put the jacket in my basket",
+      "expectedIntent": "add_to_cart",
+      "extractedIntent": "add_to_cart",
+      "intentCorrect": true,
+      "latencyMs": 156,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 3,
+      "group": "add",
+      "input": "I want to buy the shirt",
+      "expectedIntent": "add_to_cart",
+      "extractedIntent": "add_to_cart",
+      "intentCorrect": true,
+      "latencyMs": 173,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 4,
+      "group": "add",
+      "input": "Add 2 of those jeans please",
+      "expectedIntent": "add_to_cart",
+      "extractedIntent": "add_to_cart",
+      "intentCorrect": true,
+      "latencyMs": 144,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 5,
+      "group": "add",
+      "input": "Can you add the summer dress?",
+      "expectedIntent": "add_to_cart",
+      "extractedIntent": "add_to_cart",
+      "intentCorrect": true,
+      "latencyMs": 135,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 6,
+      "group": "add",
+      "input": "I'll take the leather jacket",
+      "expectedIntent": "add_to_cart",
+      "extractedIntent": "add_to_cart",
+      "intentCorrect": true,
+      "latencyMs": 109,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 7,
+      "group": "add",
+      "input": "Add it to cart",
+      "expectedIntent": "add_to_cart",
+      "extractedIntent": "add_to_cart",
+      "intentCorrect": true,
+      "latencyMs": 295,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 8,
+      "group": "add",
+      "input": "Put that one in my bag",
+      "expectedIntent": "add_to_cart",
+      "extractedIntent": "add_to_cart",
+      "intentCorrect": true,
+      "latencyMs": 185,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 9,
+      "group": "add",
+      "input": "Add the first one to my cart",
+      "expectedIntent": "add_to_cart",
+      "extractedIntent": null,
+      "intentCorrect": false,
+      "latencyMs": 249,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 10,
+      "group": "add",
+      "input": "I want the white party shirt",
+      "expectedIntent": "add_to_cart",
+      "extractedIntent": "add_to_cart",
+      "intentCorrect": true,
+      "latencyMs": 165,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 11,
+      "group": "view",
+      "input": "What's in my cart?",
+      "expectedIntent": "view_cart",
+      "extractedIntent": "view_cart",
+      "intentCorrect": true,
+      "latencyMs": 165,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 12,
+      "group": "view",
+      "input": "Show me my basket",
+      "expectedIntent": "view_cart",
+      "extractedIntent": "view_cart",
+      "intentCorrect": true,
+      "latencyMs": 140,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 13,
+      "group": "view",
+      "input": "What have I added?",
+      "expectedIntent": "view_cart",
+      "extractedIntent": "add_to_cart",
+      "intentCorrect": false,
+      "latencyMs": 155,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 14,
+      "group": "view",
+      "input": "View my cart please",
+      "expectedIntent": "view_cart",
+      "extractedIntent": "view_cart",
+      "intentCorrect": true,
+      "latencyMs": 172,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 15,
+      "group": "view",
+      "input": "How many items in my bag?",
+      "expectedIntent": "view_cart",
+      "extractedIntent": "view_cart",
+      "intentCorrect": true,
+      "latencyMs": 118,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 16,
+      "group": "checkout",
+      "input": "I want to checkout",
+      "expectedIntent": "checkout",
+      "extractedIntent": "checkout",
+      "intentCorrect": true,
+      "latencyMs": 144,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 17,
+      "group": "checkout",
+      "input": "Take me to checkout",
+      "expectedIntent": "checkout",
+      "extractedIntent": "checkout",
+      "intentCorrect": true,
+      "latencyMs": 111,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 18,
+      "group": "checkout",
+      "input": "Ready to pay",
+      "expectedIntent": "checkout",
+      "extractedIntent": "checkout",
+      "intentCorrect": true,
+      "latencyMs": 143,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 19,
+      "group": "checkout",
+      "input": "Let me buy these items",
+      "expectedIntent": "checkout",
+      "extractedIntent": "add_to_cart",
+      "intentCorrect": false,
+      "latencyMs": 195,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 20,
+      "group": "checkout",
+      "input": "Proceed to payment",
+      "expectedIntent": "checkout",
+      "extractedIntent": "checkout",
+      "intentCorrect": true,
+      "latencyMs": 96,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 21,
+      "group": "checkout",
+      "input": "I'm done shopping, checkout please",
+      "expectedIntent": "checkout",
+      "extractedIntent": "checkout",
+      "intentCorrect": true,
+      "latencyMs": 87,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 22,
+      "group": "checkout",
+      "input": "Complete my order",
+      "expectedIntent": "checkout",
+      "extractedIntent": "checkout",
+      "intentCorrect": true,
+      "latencyMs": 295,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 23,
+      "group": "checkout",
+      "input": "Time to pay",
+      "expectedIntent": "checkout",
+      "extractedIntent": "checkout",
+      "intentCorrect": true,
+      "latencyMs": 93,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 24,
+      "group": "checkout",
+      "input": "Buy now",
+      "expectedIntent": "checkout",
+      "extractedIntent": "checkout",
+      "intentCorrect": true,
+      "latencyMs": 115,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 25,
+      "group": "checkout",
+      "input": "Finish my purchase",
+      "expectedIntent": "checkout",
+      "extractedIntent": "checkout",
+      "intentCorrect": true,
+      "latencyMs": 101,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 26,
+      "group": "remove",
+      "input": "Remove the dress from my cart",
+      "expectedIntent": "remove_from_cart",
+      "extractedIntent": "remove_from_cart",
+      "intentCorrect": true,
+      "latencyMs": 109,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 27,
+      "group": "remove",
+      "input": "Take out the jacket",
+      "expectedIntent": "remove_from_cart",
+      "extractedIntent": "remove_from_cart",
+      "intentCorrect": true,
+      "latencyMs": 92,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 28,
+      "group": "remove",
+      "input": "Delete the shirt from my basket",
+      "expectedIntent": "remove_from_cart",
+      "extractedIntent": "remove_from_cart",
+      "intentCorrect": true,
+      "latencyMs": 91,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 29,
+      "group": "remove",
+      "input": "I don't want the jeans anymore",
+      "expectedIntent": "remove_from_cart",
+      "extractedIntent": "remove_from_cart",
+      "intentCorrect": true,
+      "latencyMs": 100,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 30,
+      "group": "remove",
+      "input": "Remove that item",
+      "expectedIntent": "remove_from_cart",
+      "extractedIntent": "remove_from_cart",
+      "intentCorrect": true,
+      "latencyMs": 162,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 31,
+      "group": "clear",
+      "input": "Clear my cart",
+      "expectedIntent": "clear_cart",
+      "extractedIntent": "clear_cart",
+      "intentCorrect": true,
+      "latencyMs": 90,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 32,
+      "group": "clear",
+      "input": "Empty my basket",
+      "expectedIntent": "clear_cart",
+      "extractedIntent": "clear_cart",
+      "intentCorrect": true,
+      "latencyMs": 85,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 33,
+      "group": "clear",
+      "input": "Remove everything",
+      "expectedIntent": "clear_cart",
+      "intentCorrect": false,
+      "latencyMs": 169,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 34,
+      "group": "clear",
+      "input": "Start over",
+      "expectedIntent": "clear_cart",
+      "extractedIntent": "",
+      "intentCorrect": false,
+      "latencyMs": 87,
+      "status": 200,
+      "error": null
+    },
+    {
+      "index": 35,
+      "group": "clear",
+      "input": "Delete all items from cart",
+      "expectedIntent": "clear_cart",
+      "extractedIntent": "clear_cart",
+      "intentCorrect": true,
+      "latencyMs": 97,
+      "status": 200,
+      "error": null
+    }
+  ],
+  "urlGenerationResults": [
+    {
+      "items": 3,
+      "latencyMs": 0,
+      "urlLength": 98
+    },
+    {
+      "items": 1,
+      "latencyMs": 0,
+      "urlLength": 64
+    },
+    {
+      "items": 5,
+      "latencyMs": 1,
+      "urlLength": 132
+    },
+    {
+      "items": 5,
+      "latencyMs": 0,
+      "urlLength": 131
+    },
+    {
+      "items": 5,
+      "latencyMs": 0,
+      "urlLength": 132
+    },
+    {
+      "items": 3,
+      "latencyMs": 0,
+      "urlLength": 99
+    },
+    {
+      "items": 2,
+      "latencyMs": 0,
+      "urlLength": 82
+    },
+    {
+      "items": 4,
+      "latencyMs": 0,
+      "urlLength": 116
+    },
+    {
+      "items": 3,
+      "latencyMs": 0,
+      "urlLength": 99
+    },
+    {
+      "items": 5,
+      "latencyMs": 0,
+      "urlLength": 133
+    },
+    {
+      "items": 4,
+      "latencyMs": 0,
+      "urlLength": 115
+    },
+    {
+      "items": 5,
+      "latencyMs": 0,
+      "urlLength": 133
+    },
+    {
+      "items": 4,
+      "latencyMs": 0,
+      "urlLength": 116
+    },
+    {
+      "items": 3,
+      "latencyMs": 0,
+      "urlLength": 99
+    },
+    {
+      "items": 4,
+      "latencyMs": 0,
+      "urlLength": 116
+    },
+    {
+      "items": 4,
+      "latencyMs": 0,
+      "urlLength": 116
+    },
+    {
+      "items": 4,
+      "latencyMs": 0,
+      "urlLength": 116
+    },
+    {
+      "items": 3,
+      "latencyMs": 0,
+      "urlLength": 98
+    },
+    {
+      "items": 3,
+      "latencyMs": 0,
+      "urlLength": 98
+    },
+    {
+      "items": 2,
+      "latencyMs": 0,
+      "urlLength": 82
+    }
+  ],
+  "permalinkResults": [
+    {
+      "url": "https://the-fashion-company-3.myshopify.com/cart/44444444444444:1",
+      "status": 403,
+      "latencyMs": 82,
+      "success": false
+    },
+    {
+      "url": "https://the-fashion-company-3.myshopify.com/cart/55555555555555:1",
+      "status": 403,
+      "latencyMs": 17,
+      "success": false
+    },
+    {
+      "url": "https://the-fashion-company-3.myshopify.com/cart/66666666666666:1",
+      "status": 403,
+      "latencyMs": 17,
+      "success": false
+    },
+    {
+      "url": "https://the-fashion-company-3.myshopify.com/cart/44444444444444:1",
+      "status": 403,
+      "latencyMs": 17,
+      "success": false
+    },
+    {
+      "url": "https://the-fashion-company-3.myshopify.com/cart/55555555555555:1",
+      "status": 403,
+      "latencyMs": 17,
+      "success": false
+    }
+  ]
+}

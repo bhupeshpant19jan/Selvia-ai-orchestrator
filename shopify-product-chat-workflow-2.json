@@ -1,0 +1,489 @@
+{
+  "name": "Shopify Product Search Chat (Groq LLM)",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "13432a17-b076-4248-8d12-8cdef8269e6e",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -752,
+        112
+      ],
+      "webhookId": "f67e2ae9-cf70-4068-97f5-07ca8f0f902b"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Load session context from workflow static data\nconst staticData = $getWorkflowStaticData('global');\nconst sessionId = $json.sessionId || 'default';\nconst sessions = staticData.sessions || {};\nconst session = sessions[sessionId] || { history: [], products: {}, cart: [] };\n\n// Keep last 10 exchanges to limit context size\nconst recentHistory = session.history.slice(-10);\n\n// Build compact context string from history\nlet contextSummary = '';\nif (recentHistory.length > 0) {\n  contextSummary = recentHistory.map(h => \n    `User: ${h.user}\\nAssistant: ${h.assistant}`\n  ).join('\\n---\\n');\n}\n\n// Build product catalog from session (previously seen products)\nlet knownProducts = '';\nconst productMap = session.products || {};\nif (Object.keys(productMap).length > 0) {\n  knownProducts = Object.values(productMap).map(p =>\n    `[${p.title}] $${p.price} | ${p.url} | Type: ${p.type} | Available: ${p.available} | VariantID: ${p.variantId || 'N/A'}`\n  ).join('\\n');\n}\n\n// Build cart summary\nconst cart = session.cart || [];\nlet cartSummary = '';\nif (cart.length > 0) {\n  cartSummary = cart.map((item, i) =>\n    `${i + 1}. [${item.title}] x${item.quantity} @ $${item.price} = $${(parseFloat(item.price) * item.quantity).toFixed(2)}`\n  ).join('\\n');\n  const cartTotal = cart.reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0).toFixed(2);\n  cartSummary += `\\nCart Total: $${cartTotal}`;\n}\n\nreturn [{ json: {\n  chatInput: $json.chatInput,\n  sessionId,\n  conversationHistory: contextSummary,\n  knownProducts,\n  cartSummary,\n  cartItems: cart,\n  historyLength: recentHistory.length\n}}];"
+      },
+      "id": "load-context-001",
+      "name": "Load Session Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: \"llama-3.1-8b-instant\", messages: [{ role: \"system\", content: \"You are a query extraction assistant for an online fashion store. Extract the user's intent from their message. Consider the conversation history for context.\\n\\nSupported intents:\\n- search: looking for products (e.g. 'show me dresses')\\n- details: asking about a specific product\\n- availability: checking stock\\n- recommendation: asking for suggestions\\n- followup: referring to previously discussed items\\n- add_to_cart: wants to add a product to their cart/basket (e.g. 'add the white shirt to my cart', 'I want to buy the dress')\\n- remove_from_cart: wants to remove an item from cart (e.g. 'remove the jacket from my cart')\\n- view_cart: wants to see what is in their cart (e.g. 'show my cart', 'what's in my basket')\\n- checkout: wants to proceed to checkout/payment (e.g. 'checkout', 'I want to pay', 'complete my order')\\n- clear_cart: wants to empty the cart\\n\\nReturn a JSON object with: { \\\"search_query\\\": \\\"main search term or product name\\\", \\\"product_type\\\": \\\"type if mentioned or null\\\", \\\"price_range\\\": \\\"if mentioned or null\\\", \\\"intent\\\": \\\"search|details|availability|recommendation|followup|add_to_cart|remove_from_cart|view_cart|checkout|clear_cart\\\", \\\"references_previous\\\": true/false, \\\"quantity\\\": number_or_1 }. Only return the JSON, no other text.\" }, { role: \"user\", content: 'Current message: ' + $json.chatInput + ($json.conversationHistory ? '\\n\\nConversation history:\\n' + $json.conversationHistory : '') + ($json.knownProducts ? '\\n\\nPreviously discussed products:\\n' + $json.knownProducts : '') + ($json.cartSummary ? '\\n\\nCurrent cart:\\n' + $json.cartSummary : '') }], temperature: 0.3, max_tokens: 200 }) }}",
+        "options": {}
+      },
+      "id": "c3889fea-2e3c-4ad9-886a-5c4181e376e6",
+      "name": "Groq - Extract Query",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -496,
+        112
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "MHbRIYYUNofvF8mP",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst content = response.choices[0].message.content;\n\nlet parsed;\ntry {\n  const jsonMatch = content.match(/\\{[\\s\\S]*\\}/);\n  parsed = JSON.parse(jsonMatch ? jsonMatch[0] : content);\n} catch (e) {\n  parsed = { search_query: content.trim(), product_type: null, price_range: null, intent: 'search', references_previous: false, quantity: 1 };\n}\n\n// Normalize intent\nif (!parsed.intent) parsed.intent = 'search';\nif (!parsed.quantity || parsed.quantity < 1) parsed.quantity = 1;\n\nconst ctx = $('Load Session Context').first().json;\n\nreturn [{ json: {\n  ...parsed,\n  originalInput: ctx.chatInput,\n  sessionId: ctx.sessionId,\n  conversationHistory: ctx.conversationHistory,\n  knownProducts: ctx.knownProducts,\n  cartSummary: ctx.cartSummary,\n  cartItems: ctx.cartItems\n}}];"
+      },
+      "id": "28f946f8-b8b9-4388-9026-294eb3c5e10b",
+      "name": "Parse Query",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "add_to_cart",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cart_action"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "remove_from_cart",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cart_action"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "view_cart",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cart_action"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "checkout",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cart_action"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.intent }}",
+                    "rightValue": "clear_cart",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cart_action"
+            }
+          ]
+        },
+        "options": {
+          "allMatchingOutputs": false,
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "search"
+        }
+      },
+      "id": "route-intent-001",
+      "name": "Route by Intent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -48,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://the-fashion-company-3.myshopify.com/admin/api/2024-01/products.json?limit=50",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "shopifyOAuth2Api",
+        "options": {}
+      },
+      "id": "485ea809-155e-4b6f-a4a7-d197a38a9144",
+      "name": "Shopify - Fetch Products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        176,
+        -48
+      ],
+      "credentials": {
+        "shopifyOAuth2Api": {
+          "id": "PIgWg1jirQLKTuBC",
+          "name": "Shopify account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst fetchResults = $('Shopify - Fetch Products').first().json;\nconst allProducts = fetchResults.products || [];\n\n// Get search query from Parse Query node\nconst ctx = $('Parse Query').first().json;\nconst query = (ctx.search_query || '').toLowerCase();\nconst queryWords = query.split(/\\s+/).filter(w => w.length > 1);\n\n// Filter products locally using fuzzy matching on title, type, tags, vendor, description\nlet products = allProducts;\nif (queryWords.length > 0) {\n  const scored = allProducts.map(p => {\n    const text = [\n      p.title || '',\n      p.product_type || '',\n      p.tags || '',\n      p.vendor || '',\n      (p.body_html || '').replace(/<[^>]*>/g, '')\n    ].join(' ').toLowerCase();\n    const score = queryWords.filter(w => text.includes(w)).length;\n    return { product: p, score };\n  });\n  const matched = scored.filter(s => s.score > 0).sort((a, b) => b.score - a.score);\n  products = matched.length > 0 ? matched.map(s => s.product) : allProducts;\n}\n\nconst storeDomain = 'https://the-fashion-company-3.myshopify.com';\n\n// Extract relevant product info with links\nconst productSummaries = products.slice(0, 5).map(p => ({\n  id: p.id,\n  title: p.title,\n  handle: p.handle,\n  url: `${storeDomain}/products/${p.handle}`,\n  type: p.product_type,\n  vendor: p.vendor,\n  description: (p.body_html || '').replace(/<[^>]*>/g, '').substring(0, 150),\n  variants: p.variants.map(v => ({\n    id: v.id,\n    title: v.title,\n    price: v.price,\n    available: v.inventory_quantity > 0,\n    inventory: v.inventory_quantity\n  })),\n  tags: p.tags,\n  status: p.status\n}));\n\n// Build compact metadata for session storage (include variantId for cart)\nconst productMetadata = {};\nproductSummaries.forEach(p => {\n  const defaultVariant = p.variants[0] || {};\n  productMetadata[p.id] = {\n    title: p.title,\n    url: p.url,\n    price: defaultVariant.price || 'N/A',\n    type: p.type,\n    available: p.variants.some(v => v.available),\n    variantId: defaultVariant.id || null\n  };\n});\n\nreturn [{ json: {\n  responseType: 'search',\n  products: productSummaries,\n  productMetadata,\n  count: products.length,\n  cartAction: null,\n  cartItems: ctx.cartItems || [],\n  checkoutUrl: null,\n  originalInput: ctx.originalInput,\n  sessionId: ctx.sessionId,\n  conversationHistory: ctx.conversationHistory,\n  knownProducts: ctx.knownProducts,\n  cartSummary: ctx.cartSummary\n}}];"
+      },
+      "id": "fec779e3-ec36-453a-82f2-88f83182fe7b",
+      "name": "Merge & Format Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const ctx = $('Parse Query').first().json;\nconst intent = ctx.intent;\nconst searchQuery = (ctx.search_query || '').toLowerCase();\nconst quantity = ctx.quantity || 1;\nconst storeDomain = 'https://the-fashion-company-3.myshopify.com';\n\n// Load current cart from session\nlet cart = JSON.parse(JSON.stringify(ctx.cartItems || []));\n\n// Load known products from session static data\nconst staticData = $getWorkflowStaticData('global');\nconst sessionId = ctx.sessionId || 'default';\nconst session = (staticData.sessions || {})[sessionId] || { products: {} };\nconst knownProducts = session.products || {};\n\nlet actionMessage = '';\nlet actionType = intent;\n\nif (intent === 'add_to_cart') {\n  // Find the product the user wants to add\n  const queryWords = searchQuery.split(/\\s+/).filter(w => w.length > 1);\n  let bestMatch = null;\n  let bestScore = 0;\n\n  for (const [pid, p] of Object.entries(knownProducts)) {\n    const text = [p.title || '', p.type || ''].join(' ').toLowerCase();\n    const score = queryWords.filter(w => text.includes(w)).length;\n    if (score > bestScore) {\n      bestScore = score;\n      bestMatch = { ...p, productId: pid };\n    }\n  }\n\n  if (bestMatch && bestMatch.variantId) {\n    // Check if already in cart\n    const existingIdx = cart.findIndex(item => item.variantId === bestMatch.variantId);\n    if (existingIdx >= 0) {\n      cart[existingIdx].quantity += quantity;\n      actionMessage = `Updated quantity of \"${bestMatch.title}\" to ${cart[existingIdx].quantity} in your cart.`;\n    } else {\n      cart.push({\n        productId: bestMatch.productId,\n        variantId: bestMatch.variantId,\n        title: bestMatch.title,\n        price: bestMatch.price,\n        quantity: quantity,\n        url: bestMatch.url\n      });\n      actionMessage = `Added \"${bestMatch.title}\" (x${quantity}) at $${bestMatch.price} to your cart.`;\n    }\n  } else if (bestMatch) {\n    actionMessage = `Found \"${bestMatch.title}\" but it doesn't have variant information. Try searching for it first so we can load full details.`;\n  } else {\n    actionMessage = `Could not find a product matching \"${searchQuery}\" in your recently viewed items. Try searching for it first.`;\n  }\n\n} else if (intent === 'remove_from_cart') {\n  const queryWords = searchQuery.split(/\\s+/).filter(w => w.length > 1);\n  let removedIdx = -1;\n  let bestScore = 0;\n  cart.forEach((item, idx) => {\n    const text = item.title.toLowerCase();\n    const score = queryWords.filter(w => text.includes(w)).length;\n    if (score > bestScore) {\n      bestScore = score;\n      removedIdx = idx;\n    }\n  });\n\n  if (removedIdx >= 0) {\n    const removed = cart.splice(removedIdx, 1)[0];\n    actionMessage = `Removed \"${removed.title}\" from your cart.`;\n  } else {\n    actionMessage = `Could not find \"${searchQuery}\" in your cart.`;\n  }\n\n} else if (intent === 'view_cart') {\n  if (cart.length === 0) {\n    actionMessage = 'Your cart is empty. Browse our products and add items to get started!';\n  } else {\n    actionMessage = 'Here is your current cart:';\n  }\n\n} else if (intent === 'checkout') {\n  if (cart.length === 0) {\n    actionMessage = 'Your cart is empty. Add some products before checking out!';\n  } else {\n    actionMessage = 'Your cart is ready for checkout!';\n  }\n\n} else if (intent === 'clear_cart') {\n  const hadItems = cart.length;\n  cart = [];\n  actionMessage = hadItems > 0 ? 'Your cart has been cleared.' : 'Your cart was already empty.';\n}\n\n// Build checkout URL using Shopify cart permalink\nlet checkoutUrl = null;\nif (cart.length > 0) {\n  const cartParams = cart.map(item => `${item.variantId}:${item.quantity}`).join(',');\n  checkoutUrl = `${storeDomain}/cart/${cartParams}`;\n}\n\n// Build cart display\nconst cartDisplay = cart.map((item, i) => ({\n  index: i + 1,\n  title: item.title,\n  price: item.price,\n  quantity: item.quantity,\n  subtotal: (parseFloat(item.price) * item.quantity).toFixed(2),\n  url: item.url\n}));\nconst cartTotal = cart.reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0).toFixed(2);\n\nreturn [{ json: {\n  responseType: 'cart',\n  cartAction: actionType,\n  actionMessage,\n  cartItems: cart,\n  cartDisplay,\n  cartTotal,\n  cartCount: cart.length,\n  checkoutUrl,\n  products: [],\n  productMetadata: {},\n  count: 0,\n  originalInput: ctx.originalInput,\n  sessionId: ctx.sessionId,\n  conversationHistory: ctx.conversationHistory,\n  knownProducts: ctx.knownProducts,\n  cartSummary: ctx.cartSummary\n}}];"
+      },
+      "id": "cart-manager-001",
+      "name": "Cart Manager",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        176,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: \"llama-3.1-8b-instant\", messages: [{ role: \"system\", content: \"You are a helpful shopping assistant for The Fashion Company. You help customers browse products, manage their cart, and checkout.\\n\\nFor product search responses: Include product names, prices, availability, and brief descriptions. Always include product links. Number products for easy reference. Mention they can add items to cart (e.g. 'say add [product] to cart').\\n\\nFor cart responses: Show the cart contents clearly with item names, quantities, prices, and subtotals. Show the cart total. If a checkout URL is provided, ALWAYS include it as a clickable link saying 'Proceed to Checkout'. Remind users they can add more items, remove items, or clear the cart.\\n\\nFor checkout: Present the checkout link prominently. Remind the user the link opens Shopify's secure checkout where they can enter shipping and payment details.\\n\\nIf no products found, suggest different search terms. Keep responses concise and helpful. Format prices with $ sign.\" }, ...($json.conversationHistory ? [{ role: \"user\", content: 'Previous conversation context:\\n' + $json.conversationHistory }] : []), { role: \"user\", content: (() => { const d = $json; if (d.responseType === 'cart') { return 'Customer action: ' + d.originalInput + '\\n\\nAction result: ' + d.actionMessage + '\\n\\nCurrent cart (' + d.cartCount + ' items, total: $' + d.cartTotal + '):\\n' + JSON.stringify(d.cartDisplay, null, 2) + (d.checkoutUrl ? '\\n\\nCheckout URL: ' + d.checkoutUrl : '\\n\\n(Cart is empty)') + (d.knownProducts ? '\\n\\nAvailable products:\\n' + d.knownProducts : ''); } else { return 'Customer asked: ' + d.originalInput + '\\n\\nProducts found (' + d.count + ' total):\\n' + JSON.stringify(d.products, null, 2) + (d.knownProducts ? '\\n\\nPreviously discussed products:\\n' + d.knownProducts : '') + (d.cartSummary ? '\\n\\nCurrent cart:\\n' + d.cartSummary : ''); } })() }], temperature: 0.7, max_tokens: 600 }) }}",
+        "options": {}
+      },
+      "id": "6bdfb3ba-bcdc-4800-ac28-669701c88826",
+      "name": "Groq - Format Response",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        624,
+        112
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "MHbRIYYUNofvF8mP",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst message = response.choices[0].message.content;\nreturn [{ json: { output: message } }];"
+      },
+      "id": "a9c21854-dd48-45ed-9a80-f0a4ccf7543b",
+      "name": "Extract Final Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const message = $json.output;\n\n// Try to get data from Merge & Format (search path) or Cart Manager (cart path)\nlet ctx;\ntry {\n  ctx = $('Merge & Format Results').first().json;\n} catch (e) {\n  ctx = $('Cart Manager').first().json;\n}\n\n// Save context to session\nconst staticData = $getWorkflowStaticData('global');\nif (!staticData.sessions) staticData.sessions = {};\n\nconst sessionId = ctx.sessionId || 'default';\nif (!staticData.sessions[sessionId]) {\n  staticData.sessions[sessionId] = { history: [], products: {}, cart: [] };\n}\n\nconst session = staticData.sessions[sessionId];\n\n// Append this exchange to history (compact form)\nsession.history.push({\n  user: ctx.originalInput,\n  assistant: message.substring(0, 300)\n});\n\n// Keep only last 10 exchanges\nif (session.history.length > 10) {\n  session.history = session.history.slice(-10);\n}\n\n// Merge new product metadata into session catalog\nif (ctx.productMetadata && Object.keys(ctx.productMetadata).length > 0) {\n  Object.assign(session.products, ctx.productMetadata);\n}\n\n// Cap stored products at 20\nconst productKeys = Object.keys(session.products);\nif (productKeys.length > 20) {\n  const toRemove = productKeys.slice(0, productKeys.length - 20);\n  toRemove.forEach(k => delete session.products[k]);\n}\n\n// Update cart if this was a cart action\nif (ctx.responseType === 'cart') {\n  session.cart = ctx.cartItems || [];\n}\n\n// Clean up sessions older than 1 hour\nconst now = Date.now();\nsession.lastActive = now;\nfor (const sid of Object.keys(staticData.sessions)) {\n  if (sid !== sessionId && staticData.sessions[sid].lastActive && now - staticData.sessions[sid].lastActive > 3600000) {\n    delete staticData.sessions[sid];\n  }\n}\n\nreturn [{ json: { output: message } }];"
+      },
+      "id": "save-context-001",
+      "name": "Save Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1056,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1248,
+        112
+      ],
+      "id": "b63871aa-353d-4e74-bfc2-60984f64a524",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Load Session Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Session Context": {
+      "main": [
+        [
+          {
+            "node": "Groq - Extract Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq - Extract Query": {
+      "main": [
+        [
+          {
+            "node": "Parse Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Query": {
+      "main": [
+        [
+          {
+            "node": "Route by Intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Intent": {
+      "main": [
+        [
+          {
+            "node": "Cart Manager",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cart Manager",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cart Manager",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cart Manager",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cart Manager",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Shopify - Fetch Products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shopify - Fetch Products": {
+      "main": [
+        [
+          {
+            "node": "Merge & Format Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge & Format Results": {
+      "main": [
+        [
+          {
+            "node": "Groq - Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cart Manager": {
+      "main": [
+        [
+          {
+            "node": "Groq - Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq - Format Response": {
+      "main": [
+        [
+          {
+            "node": "Extract Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Final Response": {
+      "main": [
+        [
+          {
+            "node": "Save Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Context": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": []
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "771ba0e9-b754-4bbe-8c62-75da841f2762",
+  "meta": {
+    "instanceId": "5efa7502bd5d2701c93516ce65d384e8412573a8abe13e8dfc68cc8dfcf5d784"
+  },
+  "id": "YXxuIhpbv21DJJfA1TcAo",
+  "tags": []
+}

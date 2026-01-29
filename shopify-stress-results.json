@@ -1,0 +1,530 @@
+{
+  "timestamp": "2026-01-28T15:16:38.423Z",
+  "store": "the-fashion-company-3.myshopify.com",
+  "totalCalls": 50,
+  "statistics": {
+    "totalCalls": 50,
+    "successCount": 50,
+    "failedCount": 0,
+    "latency": {
+      "min": 151,
+      "max": 658,
+      "avg": 246,
+      "median": 212,
+      "p90": 370,
+      "p95": 438,
+      "p99": 658,
+      "totalMs": 12323
+    },
+    "buckets": {
+      "under100ms": 0,
+      "100_300ms": 40,
+      "300_500ms": 9,
+      "500_1000ms": 1,
+      "1000_2000ms": 0,
+      "over2000ms": 0
+    }
+  },
+  "calls": [
+    {
+      "index": 1,
+      "label": "search/suggest?q=shirt [product]",
+      "path": "/search/suggest.json?q=shirt&resources[type]=product",
+      "status": 200,
+      "latencyMs": 373,
+      "bodySizeBytes": 2303,
+      "productCount": 1,
+      "error": null
+    },
+    {
+      "index": 2,
+      "label": "search/suggest?q=dress [product]",
+      "path": "/search/suggest.json?q=dress&resources[type]=product",
+      "status": 200,
+      "latencyMs": 188,
+      "bodySizeBytes": 2303,
+      "productCount": 1,
+      "error": null
+    },
+    {
+      "index": 3,
+      "label": "search/suggest?q=jacket [product]",
+      "path": "/search/suggest.json?q=jacket&resources[type]=product",
+      "status": 200,
+      "latencyMs": 195,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 4,
+      "label": "search/suggest?q=jeans [product]",
+      "path": "/search/suggest.json?q=jeans&resources[type]=product",
+      "status": 200,
+      "latencyMs": 256,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 5,
+      "label": "search/suggest?q=pants [product]",
+      "path": "/search/suggest.json?q=pants&resources[type]=product",
+      "status": 200,
+      "latencyMs": 193,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 6,
+      "label": "search/suggest?q=shoes [product]",
+      "path": "/search/suggest.json?q=shoes&resources[type]=product",
+      "status": 200,
+      "latencyMs": 319,
+      "bodySizeBytes": 2669,
+      "productCount": 1,
+      "error": null
+    },
+    {
+      "index": 7,
+      "label": "search/suggest?q=hat [product]",
+      "path": "/search/suggest.json?q=hat&resources[type]=product",
+      "status": 200,
+      "latencyMs": 233,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 8,
+      "label": "search/suggest?q=belt [product]",
+      "path": "/search/suggest.json?q=belt&resources[type]=product",
+      "status": 200,
+      "latencyMs": 658,
+      "bodySizeBytes": 2918,
+      "productCount": 1,
+      "error": null
+    },
+    {
+      "index": 9,
+      "label": "search/suggest?q=scarf [product]",
+      "path": "/search/suggest.json?q=scarf&resources[type]=product",
+      "status": 200,
+      "latencyMs": 266,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 10,
+      "label": "search/suggest?q=bag [product]",
+      "path": "/search/suggest.json?q=bag&resources[type]=product",
+      "status": 200,
+      "latencyMs": 195,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 11,
+      "label": "search/suggest?q=party [product]",
+      "path": "/search/suggest.json?q=party&resources[type]=product",
+      "status": 200,
+      "latencyMs": 179,
+      "bodySizeBytes": 2669,
+      "productCount": 1,
+      "error": null
+    },
+    {
+      "index": 12,
+      "label": "search/suggest?q=formal [product]",
+      "path": "/search/suggest.json?q=formal&resources[type]=product",
+      "status": 200,
+      "latencyMs": 153,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 13,
+      "label": "search/suggest?q=casual [product]",
+      "path": "/search/suggest.json?q=casual&resources[type]=product",
+      "status": 200,
+      "latencyMs": 177,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 14,
+      "label": "search/suggest?q=summer [product]",
+      "path": "/search/suggest.json?q=summer&resources[type]=product",
+      "status": 200,
+      "latencyMs": 214,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 15,
+      "label": "search/suggest?q=winter [product]",
+      "path": "/search/suggest.json?q=winter&resources[type]=product",
+      "status": 200,
+      "latencyMs": 166,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 16,
+      "label": "search/suggest?q=elegant [product]",
+      "path": "/search/suggest.json?q=elegant&resources[type]=product",
+      "status": 200,
+      "latencyMs": 151,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 17,
+      "label": "search/suggest?q=sporty [product]",
+      "path": "/search/suggest.json?q=sporty&resources[type]=product",
+      "status": 200,
+      "latencyMs": 370,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 18,
+      "label": "search/suggest?q=classic [product]",
+      "path": "/search/suggest.json?q=classic&resources[type]=product",
+      "status": 200,
+      "latencyMs": 190,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 19,
+      "label": "search/suggest?q=modern [product]",
+      "path": "/search/suggest.json?q=modern&resources[type]=product",
+      "status": 200,
+      "latencyMs": 197,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 20,
+      "label": "search/suggest?q=vintage [product]",
+      "path": "/search/suggest.json?q=vintage&resources[type]=product",
+      "status": 200,
+      "latencyMs": 217,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 21,
+      "label": "search/suggest?q=white [product]",
+      "path": "/search/suggest.json?q=white&resources[type]=product",
+      "status": 200,
+      "latencyMs": 189,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 22,
+      "label": "search/suggest?q=black [product]",
+      "path": "/search/suggest.json?q=black&resources[type]=product",
+      "status": 200,
+      "latencyMs": 212,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 23,
+      "label": "search/suggest?q=red [product]",
+      "path": "/search/suggest.json?q=red&resources[type]=product",
+      "status": 200,
+      "latencyMs": 213,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 24,
+      "label": "search/suggest?q=blue [product]",
+      "path": "/search/suggest.json?q=blue&resources[type]=product",
+      "status": 200,
+      "latencyMs": 203,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 25,
+      "label": "search/suggest?q=green [product]",
+      "path": "/search/suggest.json?q=green&resources[type]=product",
+      "status": 200,
+      "latencyMs": 419,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 26,
+      "label": "search/suggest?q=pink [product]",
+      "path": "/search/suggest.json?q=pink&resources[type]=product",
+      "status": 200,
+      "latencyMs": 209,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 27,
+      "label": "search/suggest?q=brown [product]",
+      "path": "/search/suggest.json?q=brown&resources[type]=product",
+      "status": 200,
+      "latencyMs": 265,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 28,
+      "label": "search/suggest?q=grey [product]",
+      "path": "/search/suggest.json?q=grey&resources[type]=product",
+      "status": 200,
+      "latencyMs": 249,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 29,
+      "label": "search/suggest?q=navy [product]",
+      "path": "/search/suggest.json?q=navy&resources[type]=product",
+      "status": 200,
+      "latencyMs": 196,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 30,
+      "label": "search/suggest?q=beige [product]",
+      "path": "/search/suggest.json?q=beige&resources[type]=product",
+      "status": 200,
+      "latencyMs": 334,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 31,
+      "label": "search/suggest?q=cotton [product]",
+      "path": "/search/suggest.json?q=cotton&resources[type]=product",
+      "status": 200,
+      "latencyMs": 224,
+      "bodySizeBytes": 2304,
+      "productCount": 1,
+      "error": null
+    },
+    {
+      "index": 32,
+      "label": "search/suggest?q=leather [product]",
+      "path": "/search/suggest.json?q=leather&resources[type]=product",
+      "status": 200,
+      "latencyMs": 220,
+      "bodySizeBytes": 5552,
+      "productCount": 2,
+      "error": null
+    },
+    {
+      "index": 33,
+      "label": "search/suggest?q=silk [product]",
+      "path": "/search/suggest.json?q=silk&resources[type]=product",
+      "status": 200,
+      "latencyMs": 172,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 34,
+      "label": "search/suggest?q=denim [product]",
+      "path": "/search/suggest.json?q=denim&resources[type]=product",
+      "status": 200,
+      "latencyMs": 209,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 35,
+      "label": "search/suggest?q=wool [product]",
+      "path": "/search/suggest.json?q=wool&resources[type]=product",
+      "status": 200,
+      "latencyMs": 367,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 36,
+      "label": "search/suggest?q=linen [product]",
+      "path": "/search/suggest.json?q=linen&resources[type]=product",
+      "status": 200,
+      "latencyMs": 207,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 37,
+      "label": "search/suggest?q=polyester [product]",
+      "path": "/search/suggest.json?q=polyester&resources[type]=product",
+      "status": 200,
+      "latencyMs": 181,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 38,
+      "label": "search/suggest?q=suede [product]",
+      "path": "/search/suggest.json?q=suede&resources[type]=product",
+      "status": 200,
+      "latencyMs": 231,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 39,
+      "label": "search/suggest?q=velvet [product]",
+      "path": "/search/suggest.json?q=velvet&resources[type]=product",
+      "status": 200,
+      "latencyMs": 267,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 40,
+      "label": "search/suggest?q=satin [product]",
+      "path": "/search/suggest.json?q=satin&resources[type]=product",
+      "status": 200,
+      "latencyMs": 224,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 41,
+      "label": "search/suggest?q=white shirt [product]",
+      "path": "/search/suggest.json?q=white%20shirt&resources[type]=product",
+      "status": 200,
+      "latencyMs": 180,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 42,
+      "label": "search/suggest?q=summer dress [product]",
+      "path": "/search/suggest.json?q=summer%20dress&resources[type]=product",
+      "status": 200,
+      "latencyMs": 259,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 43,
+      "label": "search/suggest?q=leather jacket [product]",
+      "path": "/search/suggest.json?q=leather%20jacket&resources[type]=product",
+      "status": 200,
+      "latencyMs": 185,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 44,
+      "label": "search/suggest?q=party wear [product]",
+      "path": "/search/suggest.json?q=party%20wear&resources[type]=product",
+      "status": 200,
+      "latencyMs": 164,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 45,
+      "label": "search/suggest?q=cotton shirt [product]",
+      "path": "/search/suggest.json?q=cotton%20shirt&resources[type]=product",
+      "status": 200,
+      "latencyMs": 499,
+      "bodySizeBytes": 2310,
+      "productCount": 1,
+      "error": null
+    },
+    {
+      "index": 46,
+      "label": "search/suggest?q=formal pants [product]",
+      "path": "/search/suggest.json?q=formal%20pants&resources[type]=product",
+      "status": 200,
+      "latencyMs": 311,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 47,
+      "label": "search/suggest?q=blue jeans [product]",
+      "path": "/search/suggest.json?q=blue%20jeans&resources[type]=product",
+      "status": 200,
+      "latencyMs": 183,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 48,
+      "label": "search/suggest?q=black shoes [product]",
+      "path": "/search/suggest.json?q=black%20shoes&resources[type]=product",
+      "status": 200,
+      "latencyMs": 438,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 49,
+      "label": "search/suggest?q=red dress [product]",
+      "path": "/search/suggest.json?q=red%20dress&resources[type]=product",
+      "status": 200,
+      "latencyMs": 158,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    },
+    {
+      "index": 50,
+      "label": "search/suggest?q=silk scarf [product]",
+      "path": "/search/suggest.json?q=silk%20scarf&resources[type]=product",
+      "status": 200,
+      "latencyMs": 265,
+      "bodySizeBytes": 41,
+      "productCount": 0,
+      "error": null
+    }
+  ]
+}
