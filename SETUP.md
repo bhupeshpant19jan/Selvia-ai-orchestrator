@@ -1,5 +1,60 @@
 # Shopify Product Search Chat - n8n Workflow
 
+## Prerequisites
+
+Before running the bootstrap script or manual setup, ensure you have:
+
+| Requirement | How to Get It |
+|-------------|---------------|
+| **Node.js >= 18** | [nodejs.org](https://nodejs.org/) or `nvm install 18` |
+| **Python 3** | System package manager (`apt install python3`, `brew install python3`) |
+| **Git** | System package manager (`apt install git`, `brew install git`) |
+| **Groq account** (free tier) | Sign up at [console.groq.com](https://console.groq.com), create an API key |
+| **Shopify Partner/Dev store** | Create a custom app with Admin API scopes: `read_products`, `read_inventory`. Copy the Admin API access token, Client ID, and Client Secret |
+| **Anthropic API key** *(optional)* | Only needed if using Claude Code CLI |
+
+## Quick Start (Bootstrap)
+
+The `bootstrap.sh` script sets up the full local dev environment from scratch:
+
+```bash
+# Make executable (first time only)
+chmod +x bootstrap.sh
+
+# Full setup — installs deps, starts n8n, applies patches, runs tests
+./bootstrap.sh
+
+# Setup only (no tests)
+./bootstrap.sh --skip-tests
+
+# Skip n8n install/startup (prereq checks + env template only)
+./bootstrap.sh --skip-n8n --skip-tests
+
+# Run tests only (assumes setup is already done)
+./bootstrap.sh --tests-only
+
+# Auto-confirm all prompts
+./bootstrap.sh -y
+
+# Show help
+./bootstrap.sh --help
+```
+
+### What the script does
+
+1. **Checks prerequisites** — verifies Node.js (>=18), npm, npx, Python3, git, curl; warns on WSL `/mnt/c/` paths
+2. **Installs n8n** — primes the npx cache if n8n isn't already cached
+3. **Installs Claude Code** — `npm install -g @anthropic-ai/claude-code` (non-fatal if fails)
+4. **Installs test deps** — `ws` module in `/tmp/node_modules/` for WebSocket tests
+5. **Creates `env.sh`** — template with placeholder values (validates existing file for unfilled placeholders)
+6. **Starts n8n** — launches in background, waits for `/healthz` to respond
+7. **Applies sort-by patch** — fixes `sortBy` + `sortOrder` query param merging in n8n middleware
+8. **Prints n8n setup instructions** — manual steps for credentials, workflow import, activation
+9. **Runs tests** — all 5 test suites with rate-limit pauses between Groq-calling tests
+10. **Prints summary** — remaining manual steps checklist
+
+---
+
 ## Overview
 A conversational chat interface that lets users search, browse, and purchase products from your Shopify store (The Fashion Company), powered by Groq LLM. Includes session context retention, cart management, and checkout via Shopify cart permalink URLs.
 
