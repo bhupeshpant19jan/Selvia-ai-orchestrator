@@ -313,7 +313,7 @@ ENVTEMPLATE
     local placeholders=0
     local placeholder_vars=()
     while IFS= read -r line; do
-        if [[ "$line" =~ ^export\ ([A-Z_]+)= ]] && [[ "$line" == *"REPLACE_ME"* ]]; then
+        if [[ "$line" =~ ^export\ ([A-Z0-9_]+)= ]] && [[ "$line" == *"REPLACE_ME"* ]]; then
             placeholder_vars+=("${BASH_REMATCH[1]}")
             placeholders=$((placeholders + 1))
         fi
