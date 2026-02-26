@@ -1,5 +1,5 @@
 {
-  "name": "Shopify Storefront API Tester – Chat + LangChain + Groq",
+  "name": "Shopify Chat Agent",
   "nodes": [
     {
       "parameters": {
