@@ -218,8 +218,9 @@ start_n8n() {
     fi
 
     info "Starting n8n in background..."
-    nohup npx n8n start > "${SCRIPT_DIR}/n8n.log" 2>&1 &
+    npx n8n start > "${SCRIPT_DIR}/n8n.log" 2>&1 &
     local n8n_pid=$!
+    disown $n8n_pid 2>/dev/null || true
     echo "$n8n_pid" > "${SCRIPT_DIR}/n8n.pid"
     info "n8n PID: ${n8n_pid}"
 

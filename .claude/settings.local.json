@@ -5,7 +5,10 @@
       "Bash(chmod:*)",
       "Bash(curl:*)",
       "Bash(npx n8n:*)",
-      "Bash(git status:*)"
+      "Bash(git status:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
